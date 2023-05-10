@@ -19,7 +19,7 @@ app.get("/beers", (req, res) => {
 
       const beers = jsonResponse.results;
 
-      res.render("beers/beers-list", {beers: beers});
+      res.render("beers/beers-list", {beers: jsonResponse});
     })
   })
 })
@@ -44,9 +44,37 @@ app.get("/beerDetails/:beerName", (req, res)=>{
 
 })
 
-app.get('/random-beer', (req, res) => {
-  res.render('Random Beer');
-});
+app.get("/random", (req, res) => {
+  fetch("https://api.punkapi.com/v2/beers")
+  .then((result)=>{
+    result.json().then((jsonResponse)=>{
+
+      const random = jsonResponse.results;
+
+      res.render("random/random-list", {random: jsonResponse});
+    })
+  })
+})
+
+app.get("/randomDetails/:randomName", (req, res)=>{
+  const name = req.params.randomName;
+
+  fetch("https://api.punkapi.com/v2/random/1/"+name)
+  .then((result)=>{
+    result.json().then((jsonResponse)=>{
+
+      const name = jsonResponse.name;
+      const image_url = jsonResponse.image_url;
+      
+      
+
+      
+      res.render("random/random-details", {name, image_url});
+    })
+  })
+
+
+})
 
 app.get('/', (req, res) => {
   res.render('index');
